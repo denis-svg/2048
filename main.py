@@ -20,16 +20,23 @@ class G2048:
                       [0, 0, 0, 0],
                       [0, 0, 0, 0]]
         self.start = True
+        self.changes = True
         """ Checking missing number images """
         Checker.checkingMissingImages()
         self.images = Checker.initImages()
 
     def runGame(self):
+        clock = pygame.time.Clock()
         while True:
+            clock.tick()
+            print(clock.get_fps())
             if self.__noMoves():
                 self.__resetGame()
+                self.changes = True
             self.__checkEvents()
-            self.__updateScreen()
+            if self.changes:
+                self.__updateScreen()
+                self.changes = False
 
     def __updateScreen(self):
         self.screen.blit(self.picture, (0, 0))
@@ -57,18 +64,22 @@ class G2048:
                     if self.__canMoveUp():
                         self.__moveUp()
                         self.__randomPick()
+                        self.changes = True
                 if event.key == pygame.K_DOWN:
                     if self.__canMoveDown():
                         self.__moveDown()
                         self.__randomPick()
+                        self.changes = True
                 if event.key == pygame.K_LEFT:
                     if self.__canMoveLeft():
                         self.__moveLeft()
                         self.__randomPick()
+                        self.changes = True
                 if event.key == pygame.K_RIGHT:
                     if self.__canMoveRight():
                         self.__moveRight()
                         self.__randomPick()
+                        self.changes = True
 
     def __noMoves(self):
         for i in range(len(self.board)):
