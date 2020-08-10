@@ -13,7 +13,7 @@ class Checker:
                 if stat(str(current_number) + ".png").st_size > 0:
                     image = pygame.image.load(str(current_number) + ".png")
                     current_width, current_height = image.get_width(), image.get_height()
-                    if current_width != Settings.image_width and current_height != Settings.image_height:
+                    if current_width != Settings.image_width or current_height != Settings.image_height:
                         remove(str(current_number) + ".png")
                         Grabber.make_image(current_number)
             except OSError:

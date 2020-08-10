@@ -19,19 +19,23 @@ class G2048:
                       [0, 0, 0, 0],
                       [0, 0, 0, 0],
                       [0, 0, 0, 0]]
-
+        self.start = True
         """ Checking missing number images """
         Checker.checkingMissingImages()
         self.images = Checker.initImages()
 
     def runGame(self):
-        self.__randomPick()
         while True:
+            if self.__noMoves():
+                self.__resetGame()
             self.__checkEvents()
             self.__updateScreen()
 
     def __updateScreen(self):
         self.screen.blit(self.picture, (0, 0))
+        if self.start:
+            self.__randomPick()
+            self.start = False
         for row in range(len(self.board)):
             for column in range(len(self.board)):
                 if self.board[row][column] != 0:
@@ -66,12 +70,39 @@ class G2048:
                         self.__moveRight()
                         self.__randomPick()
 
+    def __noMoves(self):
+        for i in range(len(self.board)):
+            for j in range(len(self.board)):
+                if self.board[i][j] == 0:
+                    return False
+
+        if not self.__canMoveRight() and not self.__canMoveLeft() and not self.__canMoveDown() and not self.__canMoveUp():
+            return True
+
+        return False
+
+    def __resetGame(self):
+        self.board = [[0, 0, 0, 0],
+                      [0, 0, 0, 0],
+                      [0, 0, 0, 0],
+                      [0, 0, 0, 0]]
+        self.start = True
+
     def __randomPickAnimation(self, row, column):
-        x, y = column * 85 + 45, row * 85 + 45
-        image = self.images["2"]
-        image = pygame.transform.scale(image, (5, 5))
-        self.screen.blit(image, (x, y))
-        pygame.display.update()
+        image_width = round(Settings.image_width / 15)
+        image_height = round(Settings.image_height / 15)
+        adder_width = round(Settings.image_width / 7.5)
+        adder_height = round(Settings.image_height / 7.5)
+        for _ in range(7):
+            image = pygame.image.load('2.png')
+            x = column * (Settings.image_width + Settings.boarder_width) + Settings.boarder_width + round((Settings.image_width - image_width) / 2)
+            y = row * (Settings.image_height + Settings.boarder_height) + Settings.boarder_height + round((Settings.image_height - image_height) / 2)
+            image = pygame.transform.scale(image, (image_width, image_height))
+            self.screen.blit(image, (x, y))
+            pygame.display.update()
+            pygame.time.delay(15)
+            image_width += adder_width
+            image_height += adder_height
 
     def __randomPick(self):
         available = []
@@ -82,7 +113,7 @@ class G2048:
 
         random_row, random_column = choice(available)
         self.board[random_row][random_column] = 2
-        # self.__randomPickAnimation(random_row, random_column)
+        self.__randomPickAnimation(random_row, random_column)
 
     def __canMoveRight(self) -> bool:
         for row in range(len(self.board)):
