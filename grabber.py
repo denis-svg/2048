@@ -37,7 +37,8 @@ class Grabber:
     font_6 = pygame.font.SysFont("norasi", size6, True)
 
     @classmethod
-    def draw_number(cls, number):
+    def drawNumber(cls, number):
+        screen = pygame.Surface((Settings.image_width, Settings.image_height))
         block_color = None
         num_color = (255, 255, 255)
         label = None
@@ -112,6 +113,28 @@ class Grabber:
         cls.screen.blit(label, (x, y))
 
     @classmethod
-    def make_image(cls, number):
-        cls.draw_number(number)
+    def makeNumberImage(cls, number):
+        cls.drawNumber(number)
         pygame.image.save(cls.screen, str(number) + ".png")
+
+    @staticmethod
+    def makeBoardImage():
+        board_height = Settings.ROWS * 15 + (Settings.ROWS + 1) * 2
+        board_width = Settings.COLS * 15 + (Settings.COLS + 1) * 2
+        screen = pygame.Surface((board_width, board_height))
+        border_color = (179, 179, 179)
+        square_color = (242, 242, 242)
+        for i in range(Settings.COLS + 1):
+            x = i * 17
+            y = 0
+            pygame.draw.rect(screen, border_color, (x, y, 2, board_height))
+        for j in range(Settings.ROWS + 1):
+            x = 0
+            y = j * 17
+            pygame.draw.rect(screen, border_color, (x, y, board_width, 2))
+        for row in range(Settings.ROWS):
+            for column in range(Settings.COLS):
+                x = column * 17 + 2
+                y = row * 17 + 2
+                pygame.draw.rect(screen, square_color, (x, y, 15, 15))
+        pygame.image.save(screen, "board.png")

@@ -1,3 +1,4 @@
+"""You can delete every image that is creating and re run the code it's gonna work anyway"""
 import pygame
 from sys import exit
 from random import choice
@@ -9,11 +10,6 @@ class G2048:
     def __init__(self):
         self.screen = pygame.display.set_mode((Settings.screen_width, Settings.screen_height))
         pygame.display.set_caption("2048")
-
-        """ Board settings """
-        self.picture = pygame.image.load("board.png")
-        self.picture = pygame.transform.scale(self.picture, (Settings.screen_width, Settings.screen_height))
-
         """ Game variables """
         self.board = [[0 for j in range(Settings.COLS)] for i in range(Settings.ROWS)]
         self.start = True
@@ -21,6 +17,9 @@ class G2048:
         """ Checking missing number images """
         Checker.checkingMissingImages()
         self.images = Checker.initImages()
+        """ Board settings """
+        self.picture = pygame.image.load("board.png")
+        self.picture = pygame.transform.scale(self.picture, (Settings.screen_width, Settings.screen_height))
 
     def runGame(self):
         clock = pygame.time.Clock()
